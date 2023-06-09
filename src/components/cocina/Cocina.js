@@ -3,6 +3,7 @@ import React, { useState } from "react";
 function Cocina() {
   const [tablas, setTablas] = useState([]);
   const [idTabla, setIdTabla] = useState(1);
+  const [estadoActivo, setEstadoActivo] = useState("PEDIDO");
 
   const generarTabla = () => {
     setTablas([...tablas, { id: idTabla, estado: "PEDIDO" }]);
@@ -25,6 +26,13 @@ function Cocina() {
     setTablas((prevTablas) => prevTablas.filter((tabla) => tabla.id !== id));
   };
 
+  const handleTabClick = (estado) => {
+    setEstadoActivo(estado);
+  };
+
+  const filtrarTablasPorEstado = () => {
+    return tablas.filter((tabla) => tabla.estado === estadoActivo);
+  };
 
   // Ejemplo de lista de productos
   const productos = [
@@ -38,29 +46,45 @@ function Cocina() {
     <div className="pantalla">
       <button onClick={generarTabla}>Generar Tabla</button>
       <div className="tablas-container">
-        {tablas.map((tabla) => (
-          <Tabla
-            key={tabla.id}
-            id={tabla.id}
-            estado={tabla.estado}
-            actualizarEstadoTabla={actualizarEstadoTabla}
-            cambiarEstadoPagado={cambiarEstadoPagado}
-            eliminarTabla={eliminarTabla}
-          />
-        ))}
+        <div className="barra-navegacion">
+          <button
+            className={estadoActivo === "PEDIDO" ? "pestaña-activa" : ""}
+            onClick={() => handleTabClick("PEDIDO")}
+          >
+            PEDIDO
+          </button>
+          <button
+            className={estadoActivo === "HECHO" ? "pestaña-activa" : ""}
+            onClick={() => handleTabClick("HECHO")}
+          >
+            HECHO
+          </button>
+          <button
+            className={estadoActivo === "PAGADO" ? "pestaña-activa" : ""}
+            onClick={() => handleTabClick("PAGADO")}
+          >
+            PAGADO
+          </button>
+        </div >
+        <div className="tablas-wrapper">
+          {filtrarTablasPorEstado().map((tabla) => (
+            <Tabla
+              key={tabla.id}
+              id={tabla.id}
+              estado={tabla.estado}
+              productos={productos} // Pasamos la lista de productos como prop
+              actualizarEstadoTabla={actualizarEstadoTabla}
+              cambiarEstadoPagado={cambiarEstadoPagado}
+              eliminarTabla={eliminarTabla}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
 }
 
-function Tabla({ id, estado, actualizarEstadoTabla, cambiarEstadoPagado, eliminarTabla }) {
-  const productos = [
-    { id: 1, nombre: "Producto 1", mesa: 1 },
-    { id: 2, nombre: "Producto 2", mesa: 2 },
-    { id: 3, nombre: "Producto 3", mesa: 3 },
-    // Agrega más productos según tus necesidades
-  ];
-
+function Tabla({ id, estado, productos, actualizarEstadoTabla, cambiarEstadoPagado, eliminarTabla }) {
   const handleClick = () => {
     if (estado === "PEDIDO") {
       actualizarEstadoTabla(id);
