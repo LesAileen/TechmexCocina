@@ -1,13 +1,33 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+.tabla {
+    background-color: #97e9bd; /* Cambiar el color a un tono de verde suave de tu elección */
+    border-collapse: collapse;
+    margin: 10px;
+  }
+  
+  .encabezado {
+    padding: 10px;
+  }
+  
+  .celda {
+    padding: 10px;
+    border: 1px solid gray;
+  }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  .tablas-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .tabla.hecho {
+    background-color: orange;
+  }
+
+  .tabla.pagado {
+    background-color: red;
+  }
+
+  .pedido.hecho,
+  .pedido.pagado {
+  /* Estilos para el estado "HECHO" y "PAGADO" */
+  /* ... */
 }
