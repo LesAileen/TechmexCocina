@@ -1,33 +1,62 @@
+.barra-navegacion {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.barra-navegacion button {
+  flex-grow: 1;
+  padding: 10px;
+  margin-right: 5px;
+  background-color: #f2f2f2;
+  border: none;
+  cursor: pointer;
+}
+
+.barra-navegacion button.pestaña-activa {
+  background-color: #ccc;
+}
+
+/*.tablas-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}*/
+
+.tablas-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .tabla {
-    background-color: #97e9bd; /* Cambiar el color a un tono de verde suave de tu elección */
-    border-collapse: collapse;
-    margin: 10px;
-  }
-  
-  .encabezado {
-    padding: 10px;
-  }
-  
-  .celda {
-    padding: 10px;
-    border: 1px solid gray;
-  }
+  background-color: #97e9bd; /* Cambiar el color a un tono de verde suave de tu elección */
+  border-collapse: collapse;
+  margin: 10px;
+}
 
-  .tablas-container {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  
-  .tabla.hecho {
-    background-color: orange;
-  }
+.encabezado {
+  padding: 10px;
+}
 
-  .tabla.pagado {
-    background-color: red;
-  }
+.celda {
+  padding: 10px;
+  border: 1px solid gray;
+}
 
-  .pedido.hecho,
-  .pedido.pagado {
-  /* Estilos para el estado "HECHO" y "PAGADO" */
-  /* ... */
+.tablas-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tabla.hecho {
+  background-color: orange;
+}
+
+.tabla.pagado {
+  background-color: red;
+}
+
+.tabla.pedido {
+  background-color: green;
 }
