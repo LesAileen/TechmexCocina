@@ -15,6 +15,12 @@ function Cocina() {
     );
   };
 
+  const cambiarEstadoPagado = (id) => {
+    setTablas((prevTablas) =>
+      prevTablas.map((tabla) => (tabla.id === id && tabla.estado === "HECHO" ? { ...tabla, estado: "PAGADO" } : tabla))
+    );
+  };
+
   const eliminarTabla = (id) => {
     setTablas((prevTablas) => prevTablas.filter((tabla) => tabla.id !== id));
   };
@@ -38,6 +44,7 @@ function Cocina() {
             id={tabla.id}
             estado={tabla.estado}
             actualizarEstadoTabla={actualizarEstadoTabla}
+            cambiarEstadoPagado={cambiarEstadoPagado}
             eliminarTabla={eliminarTabla}
           />
         ))}
@@ -46,7 +53,7 @@ function Cocina() {
   );
 }
 
-function Tabla({ id, estado, actualizarEstadoTabla, eliminarTabla }) {
+function Tabla({ id, estado, actualizarEstadoTabla, cambiarEstadoPagado, eliminarTabla }) {
   const productos = [
     { id: 1, nombre: "Producto 1", mesa: 1 },
     { id: 2, nombre: "Producto 2", mesa: 2 },
@@ -57,11 +64,13 @@ function Tabla({ id, estado, actualizarEstadoTabla, eliminarTabla }) {
   const handleClick = () => {
     if (estado === "PEDIDO") {
       actualizarEstadoTabla(id);
+    } else if (estado === "HECHO") {
+      cambiarEstadoPagado(id);
     }
   };
 
   return (
-    <table className={`tabla ${estado === "HECHO" ? "hecho" : ""}`} onClick={handleClick}>
+    <table className={`tabla ${estado === "HECHO" ? "hecho" : ""} ${estado === "PAGADO" ? "pagado" : ""}`} onClick={handleClick}>
       <thead>
         <tr>
           <th className="encabezado">Tomar o llevar<br />Mesa: {id}</th>

@@ -21,3 +21,13 @@
   .tabla.hecho {
     background-color: orange;
   }
+
+  .tabla.pagado {
+    background-color: red;
+  }
+
+  .pedido.hecho,
+  .pedido.pagado {
+  /* Estilos para el estado "HECHO" y "PAGADO" */
+  /* ... */
+}
