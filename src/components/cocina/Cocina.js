@@ -5,14 +5,20 @@ function Cocina() {
   const [idTabla, setIdTabla] = useState(1);
 
   const generarTabla = () => {
-    setTablas([...tablas, idTabla]);
+    setTablas([...tablas, { id: idTabla, estado: "PEDIDO" }]);
     setIdTabla(idTabla + 1);
   };
 
-  const eliminarTabla = (id) => {
-    const nuevasTablas = tablas.filter((tabla) => tabla !== id);
-    setTablas(nuevasTablas);
+  const actualizarEstadoTabla = (id) => {
+    setTablas((prevTablas) =>
+      prevTablas.map((tabla) => (tabla.id === id ? { ...tabla, estado: "HECHO" } : tabla))
+    );
   };
+
+  const eliminarTabla = (id) => {
+    setTablas((prevTablas) => prevTablas.filter((tabla) => tabla.id !== id));
+  };
+
 
   // Ejemplo de lista de productos
   const productos = [
@@ -26,15 +32,21 @@ function Cocina() {
     <div className="pantalla">
       <button onClick={generarTabla}>Generar Tabla</button>
       <div className="tablas-container">
-        {tablas.map((id) => (
-          <Tabla key={id} id={id} eliminarTabla={eliminarTabla} />
+        {tablas.map((tabla) => (
+          <Tabla
+            key={tabla.id}
+            id={tabla.id}
+            estado={tabla.estado}
+            actualizarEstadoTabla={actualizarEstadoTabla}
+            eliminarTabla={eliminarTabla}
+          />
         ))}
       </div>
     </div>
   );
 }
 
-function Tabla({ id, eliminarTabla }) {
+function Tabla({ id, estado, actualizarEstadoTabla, eliminarTabla }) {
   const productos = [
     { id: 1, nombre: "Producto 1", mesa: 1 },
     { id: 2, nombre: "Producto 2", mesa: 2 },
@@ -42,8 +54,14 @@ function Tabla({ id, eliminarTabla }) {
     // Agrega más productos según tus necesidades
   ];
 
+  const handleClick = () => {
+    if (estado === "PEDIDO") {
+      actualizarEstadoTabla(id);
+    }
+  };
+
   return (
-    <table className="tabla" onClick={() => eliminarTabla(id)}>
+    <table className={`tabla ${estado === "HECHO" ? "hecho" : ""}`} onClick={handleClick}>
       <thead>
         <tr>
           <th className="encabezado">Tomar o llevar<br />Mesa: {id}</th>
@@ -56,6 +74,13 @@ function Tabla({ id, eliminarTabla }) {
           </tr>
         ))}
       </tbody>
+      <tfoot>
+        <tr>
+          <td className={`pedido ${estado === "HECHO" ? "hecho" : ""}`} colSpan="2">
+            {estado}
+          </td>
+        </tr>
+      </tfoot>
     </table>
   );
 }
