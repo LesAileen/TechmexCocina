@@ -6,8 +6,21 @@ function Cocina() {
   const [estadoActivo, setEstadoActivo] = useState("PEDIDO");
 
   const generarTabla = () => {
-    setTablas([...tablas, { id: idTabla, estado: "PEDIDO" }]);
+    setTablas([...tablas, { id: idTabla, estado: "PEDIDO", productos: generarProductos(3) }]);
     setIdTabla(idTabla + 1);
+  };
+
+  const generarTablaPersonalizada = (estadoPersonalizado) => {
+    setTablas([...tablas, { id: idTabla, estado: "PEDIDO", productos: generarProductos(6) }]);
+    setIdTabla(idTabla + 1);
+  };
+
+  const generarProductos = (cantidad) => {
+    const productos = [];
+    for (let i = 1; i <= cantidad; i++) {
+      productos.push({ id: i, nombre: `Producto ${i}`, mesa: idTabla });
+    }
+    return productos;
   };
 
   const actualizarEstadoTabla = (id) => {
@@ -34,17 +47,10 @@ function Cocina() {
     return tablas.filter((tabla) => tabla.estado === estadoActivo);
   };
 
-  // Ejemplo de lista de productos
-  const productos = [
-    { id: 1, nombre: "Producto 1", mesa: 1 },
-    { id: 2, nombre: "Producto 2", mesa: 2 },
-    { id: 3, nombre: "Producto 3", mesa: 3 },
-    // Agrega más productos según tus necesidades
-  ];
-
   return (
     <div className="pantalla">
       <button onClick={generarTabla}>Generar Tabla</button>
+      <button onClick={() => generarTablaPersonalizada("PERSONALIZADO")}>Generar Tabla Personalizada</button>
       <div className="tablas-container">
         <div className="barra-navegacion">
           <button
@@ -72,7 +78,7 @@ function Cocina() {
               key={tabla.id}
               id={tabla.id}
               estado={tabla.estado}
-              productos={productos} // Pasamos la lista de productos como prop
+              productos={tabla.productos} // Pasamos la lista de productos como prop
               actualizarEstadoTabla={actualizarEstadoTabla}
               cambiarEstadoPagado={cambiarEstadoPagado}
               eliminarTabla={eliminarTabla}
