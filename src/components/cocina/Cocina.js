@@ -1,35 +1,65 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 function Cocina() {
   const [tablas, setTablas] = useState([]);
-  const [idTabla, setIdTabla] = useState(1);
   const [estadoActivo, setEstadoActivo] = useState("PEDIDO");
 
-  const generarTabla = () => {
-    setTablas([...tablas, { id: idTabla, estado: "PEDIDO", productos: generarProductos(3) }]);
-    setIdTabla(idTabla + 1);
-  };
+  useEffect(() => {
+    cargarTablas();
+  }, []);
 
-  const generarTablaPersonalizada = (estadoPersonalizado) => {
-    setTablas([...tablas, { id: idTabla, estado: "PEDIDO", productos: generarProductos(6) }]);
-    setIdTabla(idTabla + 1);
-  };
+  const cargarTablas = async () => {
+    try {
+      const response = await axios.get("http://localhost:8090/pedido/list");
+      const pedidos = response.data;
 
-  const generarProductos = (cantidad) => {
-    const productos = [];
-    for (let i = 1; i <= cantidad; i++) {
-      productos.push({ id: i, nombre: `Producto ${i}`, mesa: idTabla });
+      const nuevasTablas = pedidos.map((pedido) => {
+        return {
+          id: pedido.idFactura,
+          estado: pedido.estadoPedido,
+          productos: pedido.productos,
+          numeroMesa: pedido.numeroMesa,
+        };
+      });
+
+      setTablas(nuevasTablas);
+    } catch (error) {
+      console.log("Error al generar las tablas:", error);
     }
-    return productos;
   };
 
-  const actualizarEstadoTabla = (id) => {
+  const actualizarEstadoTabla = async (id) => {
+    const facturaId = tablas.find((tabla) => tabla.id === id)?.id;
+    
+    try {
+      await axios.post(`http://localhost:8090/pedido/pasarEstadoHecho?facturaId=${facturaId}`);
+      setTablas((prevTablas) =>
+        prevTablas.map((tabla) => (tabla.id === id ? { ...tabla, estado: "HECHO" } : tabla))
+      );
+
+      window.location.reload();
+    } catch (error) {
+      console.log("Error al cambiar el estado a 'HECHO':", error);
+    }
+    
     setTablas((prevTablas) =>
       prevTablas.map((tabla) => (tabla.id === id ? { ...tabla, estado: "HECHO" } : tabla))
     );
   };
 
-  const cambiarEstadoPagado = (id) => {
+  const cambiarEstadoPagado = async (id) => {
+
+    try {
+      await axios.post(`http://localhost:8090/pedido/pasarEstadoPagado?facturaId=${id}`);
+      setTablas((prevTablas) =>
+        prevTablas.map((tabla) => (tabla.id === id ? { ...tabla, estado: "HECHO" } : tabla))
+      );
+
+      window.location.reload();
+    } catch (error) {
+      console.log("Error al cambiar el estado a 'HECHO':", error);
+    }
     setTablas((prevTablas) =>
       prevTablas.map((tabla) => (tabla.id === id && tabla.estado === "HECHO" ? { ...tabla, estado: "PAGADO" } : tabla))
     );
@@ -49,8 +79,7 @@ function Cocina() {
 
   return (
     <div className="pantalla">
-      <button onClick={generarTabla}>Generar Tabla</button>
-      <button onClick={() => generarTablaPersonalizada("PERSONALIZADO")}>Generar Tabla Personalizada</button>
+      <button onClick={cargarTablas}>Generar Tabla</button>
       <div className="tablas-container">
         <div className="barra-navegacion">
           <button
@@ -71,17 +100,18 @@ function Cocina() {
           >
             PAGADO
           </button>
-        </div >
+        </div>
         <div className="tablas-wrapper">
           {filtrarTablasPorEstado().map((tabla) => (
             <Tabla
               key={tabla.id}
               id={tabla.id}
               estado={tabla.estado}
-              productos={tabla.productos} // Pasamos la lista de productos como prop
+              productos={tabla.productos}
               actualizarEstadoTabla={actualizarEstadoTabla}
               cambiarEstadoPagado={cambiarEstadoPagado}
               eliminarTabla={eliminarTabla}
+              numeroMesa={tabla.numeroMesa}
             />
           ))}
         </div>
@@ -90,7 +120,7 @@ function Cocina() {
   );
 }
 
-function Tabla({ id, estado, productos, actualizarEstadoTabla, cambiarEstadoPagado, eliminarTabla }) {
+function Tabla({ id, estado, productos, actualizarEstadoTabla, cambiarEstadoPagado, eliminarTabla, numeroMesa }) {
   const handleClick = () => {
     if (estado === "PEDIDO") {
       actualizarEstadoTabla(id);
@@ -103,13 +133,16 @@ function Tabla({ id, estado, productos, actualizarEstadoTabla, cambiarEstadoPaga
     <table className={`tabla ${estado === "HECHO" ? "hecho" : ""} ${estado === "PAGADO" ? "pagado" : ""}`} onClick={handleClick}>
       <thead>
         <tr>
-          <th className="encabezado">Tomar o llevar<br />Mesa: {id}</th>
+          <th className="encabezado">Tomar o llevar<br />MESA: {numeroMesa}</th>
+        </tr>
+        <tr>
+          <td className="encabezado">Factura: {id}</td>
         </tr>
       </thead>
       <tbody>
-        {productos.map((producto) => (
-          <tr key={producto.id}>
-            <td className="celda">{producto.nombre}</td>
+        {productos.map((producto, index) => (
+          <tr key={index}>
+            <td className="celda">{producto}</td>
           </tr>
         ))}
       </tbody>
