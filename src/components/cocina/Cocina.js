@@ -20,6 +20,7 @@ function Cocina() {
           estado: pedido.estadoPedido,
           productos: pedido.productos,
           numeroMesa: pedido.numeroMesa,
+          opcion: pedido.opcion
         };
       });
 
@@ -79,7 +80,6 @@ function Cocina() {
 
   return (
     <div className="pantalla">
-      <button onClick={cargarTablas}>Generar Tabla</button>
       <div className="tablas-container">
         <div className="barra-navegacion">
           <button
@@ -112,6 +112,7 @@ function Cocina() {
               cambiarEstadoPagado={cambiarEstadoPagado}
               eliminarTabla={eliminarTabla}
               numeroMesa={tabla.numeroMesa}
+              opcion={tabla.opcion}
             />
           ))}
         </div>
@@ -120,7 +121,7 @@ function Cocina() {
   );
 }
 
-function Tabla({ id, estado, productos, actualizarEstadoTabla, cambiarEstadoPagado, eliminarTabla, numeroMesa }) {
+function Tabla({ id, estado, productos, actualizarEstadoTabla, cambiarEstadoPagado, eliminarTabla, numeroMesa, opcion }) {
   const handleClick = () => {
     if (estado === "PEDIDO") {
       actualizarEstadoTabla(id);
@@ -133,10 +134,7 @@ function Tabla({ id, estado, productos, actualizarEstadoTabla, cambiarEstadoPaga
     <table className={`tabla ${estado === "HECHO" ? "hecho" : ""} ${estado === "PAGADO" ? "pagado" : ""}`} onClick={handleClick}>
       <thead>
         <tr>
-          <th className="encabezado">Tomar o llevar<br />MESA: {numeroMesa}</th>
-        </tr>
-        <tr>
-          <td className="encabezado">Factura: {id}</td>
+          <th className="encabezado">{opcion}<br />MESA: {numeroMesa}<br />Factura: {id}</th>
         </tr>
       </thead>
       <tbody>

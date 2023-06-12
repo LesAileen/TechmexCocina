@@ -54,7 +54,7 @@
 }
 
 .tabla.pagado {
-  background-color: red;
+  background-color: rgb(234, 84, 84);
 }
 
 .tabla.pedido {
