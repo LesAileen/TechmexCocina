@@ -1,3 +1,8 @@
+
+body {
+  background-image: url('./img/fondo2.jpg');
+}
+
 .barra-navegacion {
   display: flex;
   justify-content: space-between;
@@ -30,7 +35,7 @@
 }
 
 .tabla {
-  background-color: #97e9bd; /* Cambiar el color a un tono de verde suave de tu elección */
+  background-color: #97cce9; /* Cambiar el color a un tono de verde suave de tu elección */
   border-collapse: collapse;
   margin: 10px;
 }
@@ -50,13 +55,10 @@
 }
 
 .tabla.hecho {
-  background-color: orange;
+  background-color: rgb(156, 234, 181);
 }
 
 .tabla.pagado {
-  background-color: rgb(234, 84, 84);
+  background-color: rgb(238, 173, 89);
 }
 
-.tabla.pedido {
-  background-color: green;
-}
