@@ -11,7 +11,7 @@ function Cocina() {
 
   const cargarTablas = async () => {
     try {
-      const response = await axios.get("http://localhost:8090/pedido/list");
+      const response = await axios.get("http://192.168.191.41:8090/pedido/list");
       const pedidos = response.data;
 
       const nuevasTablas = pedidos.map((pedido) => {
@@ -34,7 +34,7 @@ function Cocina() {
     const facturaId = tablas.find((tabla) => tabla.id === id)?.id;
     
     try {
-      await axios.post(`http://localhost:8090/pedido/pasarEstadoHecho?facturaId=${facturaId}`);
+      await axios.post(`http://192.168.191.41:8090/pedido/pasarEstadoHecho?facturaId=${facturaId}`);
       setTablas((prevTablas) =>
         prevTablas.map((tabla) => (tabla.id === id ? { ...tabla, estado: "HECHO" } : tabla))
       );
@@ -52,7 +52,7 @@ function Cocina() {
   const cambiarEstadoPagado = async (id) => {
 
     try {
-      await axios.post(`http://localhost:8090/pedido/pasarEstadoPagado?facturaId=${id}`);
+      await axios.post(`http://192.168.191.41:8090/pedido/pasarEstadoPagado?facturaId=${id}`);
       setTablas((prevTablas) =>
         prevTablas.map((tabla) => (tabla.id === id ? { ...tabla, estado: "HECHO" } : tabla))
       );
